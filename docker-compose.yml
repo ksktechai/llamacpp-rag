@@ -1,0 +1,106 @@
+version: "3.9"
+
+services:
+
+  # ------------------------------------------------------------
+  # PostgreSQL + pgvector
+  # ------------------------------------------------------------
+  # This is the vector database used by the RAG pipeline.
+  # - Stores document chunks
+  # - Stores embeddings (vector(768) when using Ollama embeddings)
+  # - Used for similarity search during chat
+  #
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: llamacpp_rag_pg
+
+    # Database credentials used by Spring Boot
+    environment:
+      POSTGRES_DB: ragdb
+      POSTGRES_USER: rag
+      POSTGRES_PASSWORD: rag
+
+    # Expose Postgres locally (useful for debugging with psql, DBeaver, etc.)
+    ports:
+      - "5432:5432"
+
+    # Persistent volume so embeddings survive restarts
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+  # ------------------------------------------------------------
+  # Ollama
+  # ------------------------------------------------------------
+  # Used ONLY for embeddings (not chat).
+  # We use the 'nomic-embed-text' model because:
+  # - Fast
+  # - High quality semantic embeddings
+  # - 768 dimensions (compatible with pgvector HNSW index)
+  #
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+
+    # Ollama API endpoint
+    ports:
+      - "11434:11434"
+
+    # Persist downloaded models between restarts
+    volumes:
+      - ollama:/root/.ollama
+
+
+  # ------------------------------------------------------------
+  # llama.cpp (OpenAI-compatible server)
+  # ------------------------------------------------------------
+  # Used ONLY for chat / generation (not embeddings).
+  # Exposes OpenAI-compatible endpoints:
+  #   - /v1/chat/completions
+  #   - /v1/embeddings (enabled but not used once Ollama is active)
+  #
+  llamacpp:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: llamacpp_server
+
+    # Expose llama.cpp as OpenAI-compatible API on localhost:8081
+    ports:
+      - "8081:8080"
+
+    # Mount local models directory (GGUF files live here)
+    volumes:
+      - ./models:/models
+
+    # llama.cpp server startup command
+    # ----------------------------------------------------------
+    # -m              : Path to the GGUF model file
+    # --host          : Bind to all interfaces (needed inside Docker)
+    # --port          : Internal container port (mapped above)
+    # --ctx-size      : Context window size (4096 is plenty for RAG)
+    # --threads       : CPU threads to use (match your CPU cores)
+    # --embeddings    : Enable embeddings endpoint (still useful)
+    # --pooling mean  : Required for OpenAI-compatible embeddings
+    # --n-predict     : Hard cap on tokens generated per response
+    #
+    command: >
+      -m /models/qwen2.5-3b-instruct-q4_k_m.gguf
+      --host 0.0.0.0
+      --port 8080
+      --ctx-size 4096
+      --threads 8
+      --embeddings
+      --pooling mean
+      --n-predict 256
+
+
+# ------------------------------------------------------------
+# Named volumes
+# ------------------------------------------------------------
+# These ensure data survives container restarts
+#
+volumes:
+  # Stores Postgres data (pgvector embeddings)
+  pgdata:
+
+  # Stores Ollama downloaded models (e.g., nomic-embed-text)
+  ollama:

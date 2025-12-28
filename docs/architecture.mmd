@@ -1,0 +1,28 @@
+flowchart TB
+    classDef svc fill:#1f2937,stroke:#94a3b8,color:#e5e7eb;
+    classDef db fill:#0f172a,stroke:#38bdf8,color:#e5e7eb;
+
+    subgraph A[Ingestion Flow]
+        A1["1. Documents (PDF/TXT/MD) placed in ./data folder"]:::svc
+        A2["2. Spring Boot reads files (DocumentIngestionService)"]:::svc
+        A3["3. Extract text and split into small chunks"]:::svc
+        A4["4. Generate embeddings for each chunk (Ollama: nomic-embed-text)"]:::svc
+        A5["5. Store chunks + embeddings in Postgres (pgvector)"]:::db
+        A1 --> A2 --> A3 --> A4 --> A5
+    end
+
+    subgraph B[Chat / RAG Flow]
+        B1["1. User asks a question via /api/chat?q=..."]:::svc
+        B2["2. Spring Boot handles the request (RagChatService)"]:::svc
+        B3["3. Generate embedding for the user question (Ollama)"]:::svc
+        B4["4. Find similar document chunks using vector search (pgvector HNSW)"]:::db
+        B5["5. Select the most relevant document passages (Top-K matches)"]:::svc
+        B6["6. Create final prompt by combining the question with retrieved passages"]:::svc
+        B7["7. Generate answer using llama.cpp (Qwen 2.5 3B)"]:::svc
+        B8["8. Return the final answer to the user"]:::svc
+        B1 --> B2 --> B3 --> B4 --> B5 --> B6 --> B7 --> B8
+    end
+
+    B4 --> A5
+    A4 --> A5
+    B7 --> A5

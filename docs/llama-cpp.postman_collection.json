@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "b3a455ae-dce1-4ef3-a85d-cacd2ca16c78",
+		"name": "llama-cpp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4991288"
+	},
+	"item": [
+		{
+			"name": "rag-pdf",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"ingest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=What are the key design principles for AI agents in this guide?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "What are the key design principles for AI agents in this guide?"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=what is an AI agent?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "what is an AI agent?"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=Explain the agent architecture recommended in the guide, like I’m 5.",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Explain the agent architecture recommended in the guide, like I’m 5."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-4",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=Give me a step-by-step checklist to build a production-ready agent as per the guide.",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Give me a step-by-step checklist to build a production-ready agent as per the guide."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-5",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=In the startup technical guide, How to use Google AI Agent?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "In the startup technical guide, How to use Google AI Agent?"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-6",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=List all the resources that are available to learn about Agents?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "List all the resources that are available to learn about Agents?"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-7",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=What are the key takeaways?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "What are the key takeaways?"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-8",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=In the startup technical guide, what does ADK stand for and what is it used for?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "In the startup technical guide, what does ADK stand for and what is it used for?"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-9",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=Define LLM Agent in detail?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Define LLM Agent in detail?"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-10",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/chat?q=Can you explain MCP and how it helps AI Agents?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"chat"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Can you explain MCP and how it helps AI Agents?"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query-11",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/cache/stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cache",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

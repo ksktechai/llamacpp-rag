@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: llamacpp-rag
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ragdb
+    username: rag
+    password: rag
+    hikari:
+      maxLifetime: 240000   # 4 minutes
+      keepaliveTime: 60000  # 1 minute
+      validationTimeout: 5000
+  sql:
+    init:
+      mode: always
+
+  ai:
+    openai:
+      # llama.cpp server base url (OpenAI-compatible)
+      base-url: http://localhost:8081
+      api-key: dummy
+      chat:
+        options:
+          # llama.cpp uses the model loaded at server start; this can be any string
+          model: local-llamacpp
+          max-tokens: 250
+          temperature: 0.2
+#      embedding:
+#        options:
+#          model: local-llamacpp-embed
+
+    # Embeddings move to Ollama
+    ollama:
+      base-url: http://localhost:11434
+      embedding:
+        options:
+          model: nomic-embed-text
+
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        # default table: vector_store
+        index-type: hnsw
+        distance-type: COSINE_DISTANCE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
