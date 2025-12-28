@@ -39,12 +39,14 @@ public class RagChatService {
     }
 
     /**
-     * Asks the RAG system a question and retrieves the answer, caching non-empty responses.
+     * Asks the RAG system a question and retrieves the answer, caching non-empty
+     * responses.
      *
      * @param question The question to ask
      * @return The answer to the question
      */
     public String ask(String question) {
+        logger.info("QUESTION: {}", question);
         String key = cacheKey(question);
 
         String cached = chatAnswerCache.getIfPresent(key);
@@ -52,23 +54,28 @@ public class RagChatService {
             logger.info("CACHE HIT for question='{}'", question);
             return cached;
         }
-        logger.info("CACHE MISS for question='{}'", question);
+        logger.info("CACHE MISS");
 
+        logger.info("AI REQUEST: {}", question);
         String answer = chatClient.prompt()
                 .user(question)
                 .call()
                 .content();
+        logger.info("AI RESPONSE: {}", answer);
 
-        // Cache only non-empty answers (avoid caching "I don't know" during instability)
+        // Cache only non-empty answers (avoid caching "I don't know" during
+        // instability)
         if (answer != null && !answer.isBlank() && !answer.trim().equalsIgnoreCase("I don't know")) {
             chatAnswerCache.put(key, answer);
+            logger.info("Inserting answer to cache");
         }
 
         return answer;
     }
 
     /**
-     * Generates a cache key based on the question, including model, topK/threshold, and doc filter scope.
+     * Generates a cache key based on the question, including model, topK/threshold,
+     * and doc filter scope.
      *
      * @param question The question to generate a cache key for
      * @return The generated cache key
