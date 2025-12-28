@@ -154,7 +154,7 @@ Prerequisites
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/your-username/llamacpp-rag.git
+git clone https://github.com/ksktechai/llamacpp-rag.git
 cd llamacpp-rag
 ```
 
@@ -179,6 +179,11 @@ This starts:
 - llama.cpp
 
 Pull embedding model:
+```jsunicoderegexp
+docker exec -it ollama ollama pull nomic-embed-text
+```
+
+### 4️⃣ Start the Spring Boot app
 
 ```bash
 ./gradlew bootRun
@@ -201,7 +206,8 @@ curl -G "http://localhost:8080/api/chat" \
 {"question":"What is an AI agent according to the guide?","answer":"An AI agent according to the guide is a cognitive system that can automate complex workflows, create novel user experiences, and solve business problems that were previously technically infeasible. The guide provides a roadmap to navigate the new landscape of agentic systems, covering foundational concepts, principles for reliable and responsible operation in production, and a full spectrum of tools for building and using agents on Google Cloud."}
 ```
 
-⸻
+---
+
 ## 📬 API Testing (Postman)
 
 This repository includes a ready-to-use **Postman collection** for testing the RAG APIs.
