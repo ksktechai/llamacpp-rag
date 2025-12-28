@@ -1,5 +1,7 @@
 # 🧠 Local RAG System (llama.cpp + Ollama + pgvector)
 
+![Build](https://github.com/ksktechai/llamacpp-rag/actions/workflows/build.yml/badge.svg)
+
 A fully local Retrieval-Augmented Generation (RAG) system that lets you chat 
 with PDFs and documents using open-source models — no cloud APIs, no keys, 
 no data leaving your machine.
