@@ -6,33 +6,6 @@ A fully local Retrieval-Augmented Generation (RAG) system that lets you chat
 with PDFs and documents using open-source models — no cloud APIs, no keys, 
 no data leaving your machine.
 
-🦙 What is llama.cpp
-
-Imagine this first, You have a big AI brain (like ChatGPT), but it’s usually kept in a huge data center.
-llama.cpp is a tool that lets you:
-- take that AI brain
-- shrink it down
-- run it on your own computer
-- without the internet
-
-🧠 In simple words
-llama.cpp is a super-efficient engine that runs AI language models locally on your
-laptop or server.
-
-- No cloud.
-- No account.
-- No API key.
-- No tracking.
-
-🔍 What llama.cpp actually does
-- Loads LLM models (LLaMA, Mistral, Qwen, Gemma, etc.)
-- Runs them using your CPU or GPU
-- Uses clever math tricks so big models fit on normal machines
-- Exposes every low-level knob (memory, threads, GPU layers, quantization)
-
-Think of it as:
-“The Linux kernel of local LLMs”
-
 ![Infographic](docs/architecture-infograpic.png)
 
 ## 🏗️ High-Level Architecture
@@ -86,7 +59,9 @@ flowchart TB
     A4 --> A5
     B7 --> A5
 ```
+### Sequence Diagram
 
+![sequence_flow-LlamaCpp_RAG.png](docs/sequence_flow-LlamaCpp_RAG.png)
 
 
 

@@ -1,0 +1,100 @@
+@startuml
+title LlamaCpp RAG Application - Sequence Flow
+
+actor User
+participant "RagController" as Controller #E8F5E9
+participant "DocumentIngestionService" as IngestionService #E3F2FD
+participant "RagChatService" as ChatService #FFF3E0
+participant "Cache (Caffeine)" as Cache #FCE4EC
+participant "ChatClient (Spring AI)" as ChatClient #EDE7F6
+participant "RetrievalAugmentationAdvisor" as Advisor #FFEBEE
+participant "VectorStoreDocumentRetriever" as Retriever #E0F7FA
+participant "VectorStore (PGVector)" as VectorStore #LightSkyBlue
+participant "ChatModel OpenAI/LlamaCpp\n(Qwen2.5-3b-instruct-q4_k_m.gguf)" as ChatModel #LightGoldenRodYellow
+
+== Document Ingestion Flow ==
+
+User -> Controller: POST /api/ingest
+activate Controller
+
+Controller -> IngestionService: ingestLocalFolder(path)
+activate IngestionService
+
+loop For each file in path
+    alt PDF File
+        IngestionService -> IngestionService: loadPDF & extract text
+    else Text/MD File
+        IngestionService -> IngestionService: read file content
+    end
+
+    IngestionService -> IngestionService: TokenTextSplitter.apply(content)
+    note right: Split content into chunks
+
+    IngestionService -> VectorStore: add(documents)
+    activate VectorStore
+    VectorStore --> IngestionService: void
+    deactivate VectorStore
+end
+
+IngestionService --> Controller: IngestResult
+deactivate IngestionService
+
+Controller --> User: ResponseEntity(IngestResult)
+deactivate Controller
+
+== RAG Chat Query Flow ==
+
+User -> Controller: GET /api/chat?q=question
+activate Controller
+
+Controller -> ChatService: ask(question)
+activate ChatService
+
+ChatService -> Cache: getIfPresent(cacheKey)
+activate Cache
+Cache --> ChatService: cachedAnswer (or null)
+deactivate Cache
+
+alt Cache Hit
+    ChatService --> Controller: cachedAnswer
+else Cache Miss
+    ChatService -> ChatClient: prompt().user(question).call()
+    activate ChatClient
+    
+    note right of ChatClient: Intercepted by RetrievalAugmentationAdvisor
+
+    ChatClient -> Advisor: before call
+    activate Advisor
+    
+    Advisor -> Retriever: retrieve(question)
+    activate Retriever
+    
+    Retriever -> VectorStore: similaritySearch(question)
+    activate VectorStore
+    VectorStore --> Retriever: List<Document>
+    deactivate VectorStore
+    
+    Retriever --> Advisor: List<Document>
+    deactivate Retriever
+    
+    Advisor -> Advisor: Augment prompt with context
+    Advisor --> ChatClient: Augmented Prompt
+    deactivate Advisor
+
+    ChatClient -> ChatModel: call(Augmented Prompt)
+    activate ChatModel
+    ChatModel --> ChatClient: Response String
+    deactivate ChatModel
+    
+    ChatClient --> ChatService: content()
+    deactivate ChatClient
+
+    ChatService -> Cache: put(cacheKey, answer)
+    ChatService --> Controller: answer
+end
+
+Controller --> User: ChatResponse
+deactivate Controller
+deactivate ChatService
+
+@enduml
