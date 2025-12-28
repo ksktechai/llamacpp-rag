@@ -59,6 +59,7 @@ flowchart TB
     A4 --> A5
     B7 --> A5
 ```
+
 ### Sequence Diagram
 
 ![sequence_flow-LlamaCpp_RAG.png](docs/sequence_flow-LlamaCpp_RAG.png)
