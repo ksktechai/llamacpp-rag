@@ -84,7 +84,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Decode a query string, handling null and decoding with UTF-8.
+     * Decode a query string, handling null, and decoding with UTF-8.
      *
      * @param query The query string to decode
      * @return The decoded query string, or an empty string if the input is null
