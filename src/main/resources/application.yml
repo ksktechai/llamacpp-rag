@@ -38,6 +38,7 @@ spring:
         options:
           model: nomic-embed-text
 
+    # Vectorstore to store embeddings and documents
     vectorstore:
       pgvector:
         initialize-schema: true
