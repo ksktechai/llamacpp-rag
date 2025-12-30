@@ -131,4 +131,47 @@ class DocumentIngestionServiceTest {
             doc.save(path.toFile());
         }
     }
+
+    @Test
+    void ingestLocalFolder_EmptyTextFile(@TempDir Path tempDir) throws IOException {
+        // Create an empty text file
+        Files.writeString(tempDir.resolve("empty.txt"), "");
+        // Create a blank text file (only whitespace)
+        Files.writeString(tempDir.resolve("blank.md"), "   \n\t  ");
+
+        var result = service.ingestLocalFolder(tempDir);
+
+        // Empty/blank files should be skipped
+        assertEquals(0, result.documents());
+        assertEquals(0, result.chunks());
+        assertTrue(result.warnings().isEmpty());
+        verify(vectorStore, never()).add(anyList());
+    }
+
+    @Test
+    void ingestLocalFolder_VectorStoreThrowsException(@TempDir Path tempDir) throws IOException {
+        Files.writeString(tempDir.resolve("test.txt"), "Some valid content here");
+
+        // Simulate VectorStore throwing an exception
+        doThrow(new RuntimeException("Vector store error")).when(vectorStore).add(anyList());
+
+        var result = service.ingestLocalFolder(tempDir);
+
+        // Should have a warning about the failure
+        // Note: rawDocs is NOT incremented because exception is caught before increment
+        assertFalse(result.warnings().isEmpty());
+        assertTrue(result.warnings().get(0).contains("Failed ingesting"));
+    }
+
+    @Test
+    void ingestResult_RecordAccessors() {
+        // Test the IngestResult record accessors
+        List<String> warnings = List.of("warning1", "warning2");
+        var result = new DocumentIngestionService.IngestResult(5, 10, warnings);
+
+        assertEquals(5, result.documents());
+        assertEquals(10, result.chunks());
+        assertEquals(warnings, result.warnings());
+        assertEquals(2, result.warnings().size());
+    }
 }

@@ -108,4 +108,22 @@ class RagChatServiceTest {
         // Should NOT cache empty
         verify(cache, never()).put(anyString(), anyString());
     }
+
+    @Test
+    void ask_CacheMiss_DontCacheNull() {
+        String question = "Unknown?";
+
+        when(cache.getIfPresent(anyString())).thenReturn(null);
+
+        when(chatClient.prompt()).thenReturn(requestSpec);
+        when(requestSpec.user(anyString())).thenReturn(requestSpec);
+        when(requestSpec.call()).thenReturn(responseSpec);
+        when(responseSpec.content()).thenReturn(null);
+
+        String answer = service.ask(question);
+
+        assertEquals(null, answer);
+        // Should NOT cache null
+        verify(cache, never()).put(anyString(), anyString());
+    }
 }
